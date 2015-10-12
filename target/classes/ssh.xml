@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:stdio="http://www.mulesoft.org/schema/mule/stdio"
+      xmlns:ssh="http://www.mulesoft.org/schema/mule/ssh" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:spring="http://www.springframework.org/schema/beans" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/stdio http://www.mulesoft.org/schema/mule/stdio/current/mule-stdio.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ssh http://www.mulesoft.org/schema/mule/ssh/1.2.1/mule-ssh.xsd">
+
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <ssh:config name="SSH" username="atu" password="atu" host="localhost" port="2225" timeout="600" callbackFlowName="callbackFlow" doc:name="SSH" receiverBufferSize="10000" knownHostsFile="/Users/atu/.ssh/known_hosts"/>
+      <flow name="sshbiginsights-demoFlow1" >
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/ssh" doc:name="HTTP"/>
+            <ssh:send config-ref="SSH" content="/tmp/aa.sh" doc:name="SSH"
+                  breakLine="true" />
+      </flow>
+      <flow name="callbackFlow" >
+            <logger message="#[payload]" doc:name="Logger"/>
+      </flow>
+</mule>
